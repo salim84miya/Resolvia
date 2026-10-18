@@ -1,0 +1,13 @@
+INSERT INTO customer_order (
+    id,
+    customer_id,
+    order_status,
+    estimated_delivery_time,
+    created_at
+)
+VALUES
+    (1,101, 'SHIPPED', CURRENT_TIMESTAMP + INTERVAL '3' day, CURRENT_TIMESTAMP),
+    (2,101, 'PLACED', CURRENT_TIMESTAMP + INTERVAL '5' day, CURRENT_TIMESTAMP),
+    (3,102, 'OUT_FOR_DELIVERY', CURRENT_TIMESTAMP + INTERVAL '1' day, CURRENT_TIMESTAMP),
+    (4,103, 'DELIVERED', CURRENT_TIMESTAMP - INTERVAL '2' day, CURRENT_TIMESTAMP),
+    (5,102, 'CANCELLED', NULL, CURRENT_TIMESTAMP);
