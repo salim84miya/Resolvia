@@ -18,7 +18,7 @@ public class AiAgentController {
     private final SupportTicketService supportTicketService;
 
 
-    @GetMapping("ai")
+    @GetMapping("/ai")
     public String askAi(@RequestParam String prompt){
         return chatClient
                 .prompt(prompt)

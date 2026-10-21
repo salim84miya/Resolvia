@@ -2,6 +2,7 @@ package com.salim.actora.auth.config;
 
 
 import com.salim.actora.auth.entity.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,17 @@ public class JwtConfig {
                 .signWith(secretKey())
                 .compact();
 
+    }
+
+    public String findUsernameByToken(String token){
+
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.getSubject();
     }
 
 
