@@ -5,6 +5,7 @@ import com.salim.actora.tickets.services.SupportTicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,13 +20,15 @@ public class AiAgentController {
 
 
     @GetMapping("/ai")
-    public String askAi(@RequestParam String prompt){
-        return chatClient
+    public ResponseEntity<?> askAi(@RequestParam String prompt){
+        var result = chatClient
                 .prompt(prompt)
                 .advisors(advisorSpec ->
                         advisorSpec.param(ChatMemory.CONVERSATION_ID,1L))
                 .tools(orderService,supportTicketService)
                 .call().content();
+
+        return ResponseEntity.ok(result);
     }
 
 }

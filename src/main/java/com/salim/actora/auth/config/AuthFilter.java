@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import java.io.IOException;
 public class AuthFilter extends OncePerRequestFilter {
 
 
-    private final JwtConfig jwtConfig;
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final HandlerExceptionResolver handlerExceptionResolver;
 
@@ -31,17 +32,21 @@ public class AuthFilter extends OncePerRequestFilter {
 
             String requestTokenHeader = request.getHeader("Authorization");
 
-            if(requestTokenHeader==null || requestTokenHeader.startsWith("Bearer")){
+            if(requestTokenHeader==null || !requestTokenHeader.startsWith("Bearer")){
 
                 filterChain.doFilter(request,response);
                 return;
             }
 
-            String token = requestTokenHeader.split("Bearer")[1];
+            String token = requestTokenHeader.split("Bearer ")[1];
 
-            String username = jwtConfig.findUsernameByToken(token);
+            if(!jwtService.isAccessToken(token)){
+                throw new BadRequestException("Not an valid access token");
+            }
 
-            if(username!=null || SecurityContextHolder.getContext().getAuthentication()==null){
+            String username = jwtService.findUsernameByToken(token);
+
+            if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
 
                 User user = userRepository.findByUsername(username)
                         .orElseThrow(()->new IllegalArgumentException("No user found"));
