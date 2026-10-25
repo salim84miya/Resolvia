@@ -5,13 +5,17 @@ import com.salim.actora.auth.dto.LoginResponseDto;
 import com.salim.actora.auth.dto.RefreshTokenDto;
 import com.salim.actora.auth.entity.User;
 import com.salim.actora.auth.services.AuthService;
+import com.salim.actora.util.ResponseBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +31,7 @@ public class AuthController {
 
        User user = authService.createUser(loginDto);
 
-       return ResponseEntity.ok(user);
+       return ResponseBuilder.build(user,null, HttpStatus.OK, LocalDateTime.now());
     }
 
     @PostMapping("/login")
