@@ -36,7 +36,8 @@ public class JwtService {
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .subject(user.getUsername())
-                .claims(Map.of("type","access"))
+                .claims(Map.of("type","access",
+                                "id",user.getId().toString()))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+accessTokenTimeLimit))
                 .signWith(secretKey())

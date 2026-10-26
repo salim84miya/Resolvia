@@ -1,10 +1,8 @@
 package com.salim.actora.ai.controller;
 
-import com.salim.actora.orders.services.OrderService;
-import com.salim.actora.tickets.services.SupportTicketService;
+import com.salim.actora.ai.service.AiService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,19 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AiAgentController {
 
-    private final ChatClient chatClient;
-    private final OrderService orderService;
-    private final SupportTicketService supportTicketService;
+    private final AiService aiService;
 
 
     @GetMapping("/ai")
-    public ResponseEntity<?> askAi(@RequestParam String prompt){
-        var result = chatClient
-                .prompt(prompt)
-                .advisors(advisorSpec ->
-                        advisorSpec.param(ChatMemory.CONVERSATION_ID,1L))
-                .tools(orderService,supportTicketService)
-                .call().content();
+    public ResponseEntity<?> askAi(@RequestParam String prompt, HttpServletRequest request){
+
+        var result = aiService.aiResponse(prompt,request);
 
         return ResponseEntity.ok(result);
     }

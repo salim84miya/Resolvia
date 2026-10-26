@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -73,5 +74,17 @@ public class GlobalExceptionHandler {
         errorBody.put("error",errorMsg);
 
         return ResponseBuilder.build(null,errorBody, HttpStatus.FORBIDDEN, LocalDateTime.now());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException e){
+
+        Map<String,String> errorBody = new HashMap<>();
+
+        e.getBindingResult().getFieldErrors().forEach(fieldError ->
+               errorBody.put(fieldError.getField(),fieldError.getDefaultMessage())
+                );
+        return ResponseBuilder.build(null,errorBody, HttpStatus.FORBIDDEN, LocalDateTime.now());
+
     }
 }
