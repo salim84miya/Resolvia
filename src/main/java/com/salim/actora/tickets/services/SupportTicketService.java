@@ -2,18 +2,19 @@ package com.salim.actora.tickets.services;
 
 import com.salim.actora.tickets.data.TicketStatus;
 import com.salim.actora.tickets.dto.CreateTicketDto;
-import com.salim.actora.tickets.entity.SupportTicket;
+import com.salim.actora.tickets.dto.SupportTicketResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface SupportTicketService {
 
-    public SupportTicket createTicket(CreateTicketDto dto);
+    public SupportTicketResponseDto createTicket(CreateTicketDto dto);
 
     public TicketStatus getCurrentTicketStatus(Long ticketId);
 
-    public List<SupportTicket> getAllTicketByCustomer(Long customerId);
+    public List<SupportTicketResponseDto> getAllTicketByCustomer(Long customerId);
 
 
 }

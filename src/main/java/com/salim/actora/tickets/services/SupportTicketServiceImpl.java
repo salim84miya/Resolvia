@@ -2,6 +2,7 @@ package com.salim.actora.tickets.services;
 
 import com.salim.actora.tickets.data.TicketStatus;
 import com.salim.actora.tickets.dto.CreateTicketDto;
+import com.salim.actora.tickets.dto.SupportTicketResponseDto;
 import com.salim.actora.tickets.entity.SupportTicket;
 import com.salim.actora.tickets.repository.SupportTicketRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +25,24 @@ public class SupportTicketServiceImpl implements SupportTicketService{
             "order id in long" +
             "customer id in long" +
             "ticket title and description in string")
-    public SupportTicket createTicket(CreateTicketDto dto) {
+    public SupportTicketResponseDto createTicket(CreateTicketDto dto) {
 
-        SupportTicket supportTicket = new SupportTicket();
+        SupportTicket supportTicket = SupportTicket.builder()
+                .orderId(dto.getOrderId())
+                .customerId(dto.getCustomerId())
+                .title(dto.getTitle())
+                .description(dto.getDescription())
+                .build();
 
-        supportTicket.setOrderId(dto.getOrderId());
-        supportTicket.setCustomerId(dto.getCustomerId());
-        supportTicket.setTitle(dto.getTitle());
-        supportTicket.setDescription(dto.getDescription());
+        supportTicket = supportTicketRepository.save(supportTicket);
 
-        return supportTicketRepository.save(supportTicket);
+        return SupportTicketResponseDto.builder()
+                .id(supportTicket.getId())
+                .ticketStatus(supportTicket.getStatus())
+                .title(supportTicket.getTitle())
+                .description(supportTicket.getDescription())
+                .createdAt(supportTicket.getCreatedAt())
+                .build();
     }
 
     @Override
@@ -46,8 +57,21 @@ public class SupportTicketServiceImpl implements SupportTicketService{
 
     @Override
     @Tool(description = "Returns all the tickets of the customer with the provided customer id in long.")
-    public List<SupportTicket> getAllTicketByCustomer(Long customerId) {
+    public List<SupportTicketResponseDto> getAllTicketByCustomer(Long customerId) {
 
-        return supportTicketRepository.findAllByCustomerIdOrderByCreatedAtDesc(customerId);
+        Optional<List<SupportTicket>> supportTickets = supportTicketRepository.findAllByCustomerIdOrderByCreatedAtDesc(customerId);
+
+        return supportTickets.map(supportTicketsMapped->
+
+                        supportTicketsMapped.stream().map(supportTicket->
+                                SupportTicketResponseDto.builder()
+                                        .title(supportTicket.getTitle())
+                                        .ticketStatus(supportTicket.getStatus())
+                                        .description(supportTicket.getDescription())
+                                        .createdAt(supportTicket.getCreatedAt())
+                                        .id(supportTicket.getId())
+                                        .build()).collect(Collectors.toList())
+                        ).orElseGet(List::of);
+
     }
 }

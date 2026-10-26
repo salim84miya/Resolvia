@@ -6,6 +6,7 @@ import com.salim.actora.auth.dto.RefreshTokenDto;
 import com.salim.actora.auth.entity.User;
 import com.salim.actora.auth.services.AuthService;
 import com.salim.actora.util.ResponseBuilder;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class AuthController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody LoginDto loginDto){
+    public ResponseEntity<?> createUser(@RequestBody @Valid LoginDto loginDto){
 
        User user = authService.createUser(loginDto);
 
@@ -35,26 +36,22 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto){
+    public ResponseEntity<?> loginUser(@RequestBody @Valid LoginDto loginDto){
        LoginResponseDto loginResponseDto = authService.createJwtAccessToken(loginDto);
 
-       return ResponseEntity.ok(loginResponseDto);
+       return ResponseBuilder.build(loginResponseDto,null,HttpStatus.OK,LocalDateTime.now());
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenDto tokenDto){
-
-        System.out.println("entered refresh token controller method "+tokenDto.getToken());
-
-        log.debug("entered refresh token controller method {}",tokenDto.getToken());
+    public ResponseEntity<?> refreshToken(@RequestBody @Valid RefreshTokenDto tokenDto){
 
         LoginResponseDto loginResponseDto = authService.renewRefreshAndAccessToken(tokenDto.getToken());
 
-        return ResponseEntity.ok(loginResponseDto);
+        return ResponseBuilder.build(loginResponseDto,null,HttpStatus.OK,LocalDateTime.now());
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody RefreshTokenDto tokenDto){
+    public ResponseEntity<?> logout(@RequestBody @Valid RefreshTokenDto tokenDto){
 
          authService.logout(tokenDto.getToken());
 
