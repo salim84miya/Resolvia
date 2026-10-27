@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface SupportTicketRepository extends JpaRepository<SupportTicket,Long> {
 
     Optional<List<SupportTicket>> findAllByCustomerIdOrderByCreatedAtDesc(Long customerId);
+
+    Optional<List<SupportTicket>> findAllByCustomerIdAndOrderIdOrderByCreatedAtDesc(Long customerId,Long OrderId);
 }

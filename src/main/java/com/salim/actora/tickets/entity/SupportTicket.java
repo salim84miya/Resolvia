@@ -18,30 +18,41 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "support_ticket_table")
 public class SupportTicket {
 
     @Id
     @GeneratedValue
+    @Column(name = "ticket_id")
     private Long id;
 
-    @NotNull
+    @Column(name = "customer_id",nullable = false)
     private Long customerId;
 
+    @Column(name = "order_id",nullable = false)
     private Long orderId;
 
+    @Column(name = "ticket_status",nullable = false)
     @Enumerated(EnumType.STRING)
     private TicketStatus status= TicketStatus.OPEN;
 
+    @Column(name = "ticket_priority",nullable = false)
     @Enumerated(EnumType.STRING)
     private TicketPriority priority;
 
+    @Column(name = "title")
+    @NotNull
     private String title;
 
+    @Column(name = "description")
+    @NotNull
     private String description;
 
+    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

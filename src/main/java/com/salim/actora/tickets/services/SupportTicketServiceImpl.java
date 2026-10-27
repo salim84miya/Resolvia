@@ -21,10 +21,40 @@ public class SupportTicketServiceImpl implements SupportTicketService{
     private final SupportTicketRepository supportTicketRepository;
 
     @Override
+    @Tool(description = "Returns existing support ticket "+
+            "for the provided order id and customer id"+
+            "customerId and orderId is of Long type" +
+            "use for finding existing ticket for the provided order id +" +
+            "and checking duplicate before creating new ticket")
+    public List<SupportTicketResponseDto> getAllTicketForOrder(Long customerId, Long orderId) {
+
+        Optional<List<SupportTicket>> supportTickets = supportTicketRepository
+                .findAllByCustomerIdAndOrderIdOrderByCreatedAtDesc(customerId,orderId);
+
+        return supportTickets.map(supportTicketsList->
+                supportTicketsList.stream().map(supportTicket->
+                        SupportTicketResponseDto
+                        .builder()
+                                .title(supportTicket.getTitle())
+                                .ticketStatus(supportTicket.getStatus())
+                                .description(supportTicket.getDescription())
+                                .createdAt(supportTicket.getCreatedAt())
+                                .id(supportTicket.getId())
+                                .priority(supportTicket.getPriority())
+                        .build())
+                        .collect(Collectors.toList())).orElseGet(List::of);
+    }
+
+    @Override
     @Tool(description = "Create ticket with the provided information." +
             "order id in long" +
             "customer id in long" +
             "set ticket priority which can be HIGH,MEDIUM OR LOW"+
+            "set ticket status which can be  OPEN,\n" +
+            "    IN_PROGRESS,\n" +
+            "    WAITING_FOR_CUSTOMER,\n" +
+            "    RESOLVED,\n" +
+            "    CLOSED"+
             "ticket title and description in string")
     public SupportTicketResponseDto createTicket(CreateTicketDto dto) {
 

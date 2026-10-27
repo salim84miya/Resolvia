@@ -16,5 +16,6 @@ public interface SupportTicketService {
 
     public List<SupportTicketResponseDto> getAllTicketByCustomer(Long customerId);
 
+    public List<SupportTicketResponseDto> getAllTicketForOrder(Long customerId,Long orderId);
 
 }

@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -30,10 +29,11 @@ public class AiService {
 
           UUID userId = getUserIdFromToken(request);
 
+          String customerInfo = "Customer id "+userId;
 
          return chatClient
                 .prompt()
-                 .user(userMsg)
+                 .user(userMsg+customerInfo)
                  .system(systemPrompt)
                 .advisors(advisorSpec ->
                         advisorSpec.param(ChatMemory.CONVERSATION_ID,userId))
