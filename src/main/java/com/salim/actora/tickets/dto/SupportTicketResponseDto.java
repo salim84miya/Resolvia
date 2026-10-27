@@ -1,5 +1,6 @@
 package com.salim.actora.tickets.dto;
 
+import com.salim.actora.tickets.data.TicketPriority;
 import com.salim.actora.tickets.data.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,8 @@ public class SupportTicketResponseDto {
     private String title;
 
     private String description;
+
+    private TicketPriority priority;
 
     private LocalDateTime createdAt;
 }

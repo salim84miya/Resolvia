@@ -24,6 +24,7 @@ public class SupportTicketServiceImpl implements SupportTicketService{
     @Tool(description = "Create ticket with the provided information." +
             "order id in long" +
             "customer id in long" +
+            "set ticket priority which can be HIGH,MEDIUM OR LOW"+
             "ticket title and description in string")
     public SupportTicketResponseDto createTicket(CreateTicketDto dto) {
 
@@ -32,6 +33,8 @@ public class SupportTicketServiceImpl implements SupportTicketService{
                 .customerId(dto.getCustomerId())
                 .title(dto.getTitle())
                 .description(dto.getDescription())
+                .status(TicketStatus.OPEN)
+                .priority(dto.getPriority())
                 .build();
 
         supportTicket = supportTicketRepository.save(supportTicket);
@@ -70,6 +73,7 @@ public class SupportTicketServiceImpl implements SupportTicketService{
                                         .description(supportTicket.getDescription())
                                         .createdAt(supportTicket.getCreatedAt())
                                         .id(supportTicket.getId())
+                                        .priority(supportTicket.getPriority())
                                         .build()).collect(Collectors.toList())
                         ).orElseGet(List::of);
 

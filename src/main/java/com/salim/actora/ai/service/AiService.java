@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -20,12 +23,18 @@ public class AiService {
     private final SupportTicketService supportTicketService;
     private final JwtService jwtService;
 
-    public String aiResponse(String prompt, HttpServletRequest request){
+    @Value("classpath:/prompt/ai-assistant-prompt.st")
+    private Resource systemPrompt;
+
+    public String aiResponse(String userMsg, HttpServletRequest request){
 
           UUID userId = getUserIdFromToken(request);
 
+
          return chatClient
-                .prompt(prompt)
+                .prompt()
+                 .user(userMsg)
+                 .system(systemPrompt)
                 .advisors(advisorSpec ->
                         advisorSpec.param(ChatMemory.CONVERSATION_ID,userId))
                 .tools(orderService,supportTicketService)

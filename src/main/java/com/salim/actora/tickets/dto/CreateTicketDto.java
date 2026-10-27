@@ -1,5 +1,7 @@
 package com.salim.actora.tickets.dto;
 
+import com.salim.actora.tickets.data.TicketPriority;
+import com.salim.actora.tickets.data.TicketStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +23,7 @@ public class CreateTicketDto {
 
     @NotBlank(message = "description is needed for creating ticket")
     private String description;
+
+    @NotBlank(message = "ticket priority is needed for creating ticket")
+    private TicketPriority priority;
 }

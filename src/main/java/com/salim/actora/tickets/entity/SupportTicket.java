@@ -1,5 +1,6 @@
 package com.salim.actora.tickets.entity;
 
+import com.salim.actora.tickets.data.TicketPriority;
 import com.salim.actora.tickets.data.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,11 +27,13 @@ public class SupportTicket {
     @NotNull
     private Long customerId;
 
-    @NotNull
     private Long orderId;
 
     @Enumerated(EnumType.STRING)
-    private TicketStatus status;
+    private TicketStatus status= TicketStatus.OPEN;
+
+    @Enumerated(EnumType.STRING)
+    private TicketPriority priority;
 
     private String title;
 
