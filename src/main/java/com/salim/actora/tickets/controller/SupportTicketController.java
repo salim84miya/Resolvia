@@ -31,7 +31,8 @@ public class SupportTicketController {
             @RequestParam(required = false,defaultValue = "1") int pageNo,
             @RequestParam(required = false,defaultValue = "3") int pageSize,
             @RequestParam(required = false,defaultValue = "id") String sortBy,
-            @RequestParam(required = false,defaultValue = "ASC") String sortDir
+            @RequestParam(required = false,defaultValue = "ASC") String sortDir,
+            @RequestParam(required = false) String filter
             ){
 
         Sort sort = null;
@@ -44,8 +45,10 @@ public class SupportTicketController {
 
         Pageable pageable = PageRequest.of(pageNo-1,pageSize,sort);
 
-        var body = ticketService.getAllTickets(pageable);
+        var body = ticketService.getAllTickets(pageable,filter);
 
        return ResponseBuilder.build(body,null,HttpStatus.OK,LocalDateTime.now());
     }
+
+
 }

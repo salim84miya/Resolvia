@@ -21,6 +21,6 @@ public interface SupportTicketService {
 
     public List<SupportTicketResponseDto> getAllTicketForOrder(Long customerId,Long orderId);
 
-    public ApiPageResponse<SupportTicketResponseDto> getAllTickets(Pageable pageable);
+    public ApiPageResponse<SupportTicketResponseDto> getAllTickets(Pageable pageable,String title);
 
 }

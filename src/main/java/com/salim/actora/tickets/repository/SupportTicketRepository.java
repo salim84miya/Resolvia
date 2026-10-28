@@ -1,7 +1,8 @@
 package com.salim.actora.tickets.repository;
 
 import com.salim.actora.tickets.entity.SupportTicket;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,5 @@ public interface SupportTicketRepository extends JpaRepository<SupportTicket,Lon
 
     Optional<List<SupportTicket>> findAllByCustomerIdAndOrderIdOrderByCreatedAtDesc(Long customerId,Long OrderId);
 
-
+    Page<SupportTicket> findAllByTitleContaining(Pageable pageable, String title);
 }

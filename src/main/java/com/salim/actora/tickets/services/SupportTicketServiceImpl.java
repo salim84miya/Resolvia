@@ -115,29 +115,37 @@ public class SupportTicketServiceImpl implements SupportTicketService{
 
 
     @Override
-    public ApiPageResponse<SupportTicketResponseDto> getAllTickets(Pageable pageable) {
+    public ApiPageResponse<SupportTicketResponseDto> getAllTickets(Pageable pageable,String title) {
 
-        //getting data with page informations
-        Page<SupportTicket> supportTickets =supportTicketRepository.findAll(pageable);
+        //getting data with page information
+        Page<SupportTicket> supportTickets =null;
 
-        //Getting the data in our custom dto
-        List<SupportTicketResponseDto> content = supportTickets.getContent().stream().map(supportTicket->
-                SupportTicketResponseDto.builder()
-                        .title(supportTicket.getTitle())
-                        .ticketStatus(supportTicket.getStatus())
-                        .description(supportTicket.getDescription())
-                        .createdAt(supportTicket.getCreatedAt())
-                        .id(supportTicket.getId())
-                        .priority(supportTicket.getPriority())
-                        .build()).collect(Collectors.toList());
+        if(title==null){
+            supportTickets =supportTicketRepository.findAll(pageable);
+        }else{
+            supportTickets = supportTicketRepository.findAllByTitleContaining(pageable,title);
 
-        //returning the data with page information
-        return ApiPageResponse.<SupportTicketResponseDto>builder()
-                .content(content)
-                .pageNo(supportTickets.getNumber())
-                .pageSize(supportTickets.getSize())
-                .pageElement(supportTickets.getNumberOfElements())
-                .totalPages(supportTickets.getTotalPages())
-                .build();
+        }
+
+            //Getting the data in our custom dto
+            List<SupportTicketResponseDto> content = supportTickets.getContent().stream().map(supportTicket->
+                    SupportTicketResponseDto.builder()
+                            .title(supportTicket.getTitle())
+                            .ticketStatus(supportTicket.getStatus())
+                            .description(supportTicket.getDescription())
+                            .createdAt(supportTicket.getCreatedAt())
+                            .id(supportTicket.getId())
+                            .priority(supportTicket.getPriority())
+                            .build()).collect(Collectors.toList());
+
+            //returning the data with page information
+            return ApiPageResponse.<SupportTicketResponseDto>builder()
+                    .content(content)
+                    .pageNo(supportTickets.getNumber())
+                    .pageSize(supportTickets.getSize())
+                    .pageElement(supportTickets.getNumberOfElements())
+                    .totalPages(supportTickets.getTotalPages())
+                    .build();
+
     }
 }
