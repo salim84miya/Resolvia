@@ -1,5 +1,6 @@
 package com.salim.actora.auth.config;
 
+import com.salim.actora.util.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +29,10 @@ public class SecurityFilterChainConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->
                         auth
-                                .requestMatchers("/ai/**").authenticated()
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/ticket/**").permitAll()
+                                .requestMatchers("/ai/**").authenticated()
+                                .requestMatchers("/ticket/**").hasRole(AppConstants.ADMIN_ROLE)
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 

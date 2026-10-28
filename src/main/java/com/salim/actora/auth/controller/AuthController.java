@@ -1,5 +1,6 @@
 package com.salim.actora.auth.controller;
 
+import com.salim.actora.auth.dto.CreateUserDto;
 import com.salim.actora.auth.dto.LoginDto;
 import com.salim.actora.auth.dto.LoginResponseDto;
 import com.salim.actora.auth.dto.RefreshTokenDto;
@@ -28,9 +29,12 @@ public class AuthController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody @Valid LoginDto loginDto){
+    public ResponseEntity<?> createUser(@RequestBody @Valid CreateUserDto dto){
+        System.out.println("entered create user controller method");
 
-       User user = authService.createUser(loginDto);
+       User user = authService.createUser(dto);
+
+        System.out.println("created user in controller method user: "+user.getUsername());
 
        return ResponseBuilder.build(user,null, HttpStatus.OK, LocalDateTime.now());
     }

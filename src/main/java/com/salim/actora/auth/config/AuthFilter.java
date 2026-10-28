@@ -9,12 +9,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -41,7 +45,8 @@ public class AuthFilter extends OncePerRequestFilter {
             String token = requestTokenHeader.split("Bearer ")[1];
 
             if(!jwtService.isAccessToken(token)){
-                throw new BadRequestException("Not an valid access token");
+                filterChain.doFilter(request,response);
+                return;
             }
 
             String username = jwtService.findUsernameByToken(token);
@@ -51,9 +56,11 @@ public class AuthFilter extends OncePerRequestFilter {
                 User user = userRepository.findByUsername(username)
                         .orElseThrow(()->new IllegalArgumentException("No user found"));
 
+                List<GrantedAuthority> authorities = user.getRoles()==null ? List.of() : user.getRoles().stream().map(role->new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                user,null,user.getAuthorities()
+                                user,null,authorities
                         );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

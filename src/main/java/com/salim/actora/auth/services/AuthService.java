@@ -1,12 +1,16 @@
 package com.salim.actora.auth.services;
 
 import com.salim.actora.auth.config.JwtService;
+import com.salim.actora.auth.dto.CreateUserDto;
 import com.salim.actora.auth.dto.LoginDto;
 import com.salim.actora.auth.dto.LoginResponseDto;
 import com.salim.actora.auth.entity.RefreshToken;
+import com.salim.actora.auth.entity.Role;
 import com.salim.actora.auth.entity.User;
 import com.salim.actora.auth.repository.RefreshTokenRepository;
+import com.salim.actora.auth.repository.RoleRepository;
 import com.salim.actora.auth.repository.UserRepository;
+import com.salim.actora.util.AppConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +34,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRepository repository;
+    private final RoleRepository roleRepository;
 
 
     public LoginResponseDto createJwtAccessToken(LoginDto loginDto){
@@ -184,9 +189,12 @@ public class AuthService {
 
     }
 
-    public User createUser(LoginDto dto){
+    public User createUser(CreateUserDto dto){
 
         Optional<User> existingUser = userRepository.findByUsername(dto.getUsername());
+
+
+        System.out.println("entered create user method service is Present"+existingUser.isPresent());
 
         if(existingUser.isPresent()){
             throw new RuntimeException("User Already exists with username");
@@ -194,8 +202,25 @@ public class AuthService {
 
         User user = new User();
 
+        Role role = null;
+
+        if(dto.getRole()!=null && !dto.getRole().isBlank()){
+            role = roleRepository.findByName("ROLE_"+dto.getRole())
+                    .orElseThrow(()->new RuntimeException("No role found"));
+        }else{
+            role = roleRepository.findByName("ROLE_"+AppConstants.USER_ROLE)
+                    .orElseThrow(()->new RuntimeException("No role found"));
+        }
+
+        user.getRoles().add(role);
+
+        System.out.println("User role set");
+
+
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        System.out.println("Saving user");
 
         return userRepository.save(user);
 
