@@ -31,6 +31,7 @@ public class SecurityFilterChainConfig {
                                 .requestMatchers("/ai/**").authenticated()
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/ticket/**").permitAll()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 
