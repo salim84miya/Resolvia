@@ -4,6 +4,7 @@ import com.salim.actora.tickets.data.TicketStatus;
 import com.salim.actora.tickets.dto.ApiPageResponse;
 import com.salim.actora.tickets.dto.CreateTicketDto;
 import com.salim.actora.tickets.dto.SupportTicketResponseDto;
+import com.salim.actora.tickets.dto.TicketUpdateDto;
 import com.salim.actora.tickets.entity.SupportTicket;
 import com.salim.actora.tickets.repository.SupportTicketRepository;
 import lombok.RequiredArgsConstructor;
@@ -147,5 +148,25 @@ public class SupportTicketServiceImpl implements SupportTicketService{
                     .totalPages(supportTickets.getTotalPages())
                     .build();
 
+    }
+
+    @Override
+    public SupportTicketResponseDto updateTicketStatus(TicketUpdateDto ticketUpdateDto) {
+
+        SupportTicket supportTicket = supportTicketRepository.findById(ticketUpdateDto.getTicketId())
+                .orElseThrow(()->new IllegalArgumentException("No ticket found with the id"));
+
+        supportTicket.setStatus(ticketUpdateDto.getStatus());
+
+        supportTicket =  supportTicketRepository.save(supportTicket);
+
+        return SupportTicketResponseDto.builder()
+                .title(supportTicket.getTitle())
+                .ticketStatus(supportTicket.getStatus())
+                .description(supportTicket.getDescription())
+                .createdAt(supportTicket.getCreatedAt())
+                .id(supportTicket.getId())
+                .priority(supportTicket.getPriority())
+                .build();
     }
 }

@@ -4,6 +4,7 @@ import com.salim.actora.tickets.data.TicketStatus;
 import com.salim.actora.tickets.dto.ApiPageResponse;
 import com.salim.actora.tickets.dto.CreateTicketDto;
 import com.salim.actora.tickets.dto.SupportTicketResponseDto;
+import com.salim.actora.tickets.dto.TicketUpdateDto;
 import com.salim.actora.tickets.entity.SupportTicket;
 import org.springframework.data.domain.Pageable;
 
@@ -23,4 +24,5 @@ public interface SupportTicketService {
 
     public ApiPageResponse<SupportTicketResponseDto> getAllTickets(Pageable pageable,String title);
 
+    public SupportTicketResponseDto updateTicketStatus(TicketUpdateDto ticketUpdateDto);
 }

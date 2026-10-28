@@ -1,22 +1,19 @@
 package com.salim.actora.tickets.controller;
 
-import com.salim.actora.tickets.dto.SupportTicketResponseDto;
-import com.salim.actora.tickets.entity.SupportTicket;
+import com.salim.actora.tickets.dto.CreateTicketDto;
+import com.salim.actora.tickets.dto.TicketUpdateDto;
 import com.salim.actora.tickets.services.SupportTicketService;
 import com.salim.actora.util.ResponseBuilder;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,5 +47,20 @@ public class SupportTicketController {
        return ResponseBuilder.build(body,null,HttpStatus.OK,LocalDateTime.now());
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<?> createTicket(@RequestBody @Valid CreateTicketDto dto){
+
+        var body = ticketService.createTicket(dto);
+
+        return ResponseBuilder.build(body,null,HttpStatus.OK,LocalDateTime.now());
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateTicketStatus(@RequestBody @Valid TicketUpdateDto dto){
+
+        var body = ticketService.updateTicketStatus(dto);
+
+        return ResponseBuilder.build(body,null,HttpStatus.OK,LocalDateTime.now());
+    }
 
 }
