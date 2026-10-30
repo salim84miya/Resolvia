@@ -16,9 +16,9 @@ public class OrderResponseDto {
 
     private Long orderId;
 
-    private OrderStatus orderStatus;
+    private OrderStatus currentStatus;
 
-    private LocalDateTime estimatedDeliveryTime;
+    private LocalDateTime deliveryTime;
 
     private LocalDateTime createdAt;
 }

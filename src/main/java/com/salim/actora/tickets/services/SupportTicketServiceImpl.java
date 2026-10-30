@@ -6,6 +6,7 @@ import com.salim.actora.tickets.dto.CreateTicketDto;
 import com.salim.actora.tickets.dto.SupportTicketResponseDto;
 import com.salim.actora.tickets.dto.TicketUpdateDto;
 import com.salim.actora.tickets.entity.SupportTicket;
+import com.salim.actora.tickets.mapper.TicketMapper;
 import com.salim.actora.tickets.repository.SupportTicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
@@ -37,15 +38,16 @@ public class SupportTicketServiceImpl implements SupportTicketService{
 
         return supportTickets.map(supportTicketsList->
                 supportTicketsList.stream().map(supportTicket->
-                        SupportTicketResponseDto
-                        .builder()
-                                .title(supportTicket.getTitle())
-                                .ticketStatus(supportTicket.getStatus())
-                                .description(supportTicket.getDescription())
-                                .createdAt(supportTicket.getCreatedAt())
-                                .id(supportTicket.getId())
-                                .priority(supportTicket.getPriority())
-                        .build())
+//                        SupportTicketResponseDto
+//                        .builder()
+//                                .title(supportTicket.getTitle())
+//                                .ticketStatus(supportTicket.getStatus())
+//                                .description(supportTicket.getDescription())
+//                                .createdAt(supportTicket.getCreatedAt())
+//                                .id(supportTicket.getId())
+//                                .priority(supportTicket.getPriority())
+//                        .build())
+                        TicketMapper.mapper.mapSupportTicketToDto(supportTicket))
                         .collect(Collectors.toList())).orElseGet(List::of);
     }
 
@@ -74,13 +76,15 @@ public class SupportTicketServiceImpl implements SupportTicketService{
 
         supportTicket = supportTicketRepository.save(supportTicket);
 
-        return SupportTicketResponseDto.builder()
-                .id(supportTicket.getId())
-                .ticketStatus(supportTicket.getStatus())
-                .title(supportTicket.getTitle())
-                .description(supportTicket.getDescription())
-                .createdAt(supportTicket.getCreatedAt())
-                .build();
+//        return SupportTicketResponseDto.builder()
+//                .id(supportTicket.getId())
+//                .ticketStatus(supportTicket.getStatus())
+//                .title(supportTicket.getTitle())
+//                .description(supportTicket.getDescription())
+//                .createdAt(supportTicket.getCreatedAt())
+//                .build();
+
+        return TicketMapper.mapper.mapSupportTicketToDto(supportTicket);
     }
 
     @Override
@@ -102,14 +106,16 @@ public class SupportTicketServiceImpl implements SupportTicketService{
         return supportTickets.map(supportTicketsMapped->
 
                         supportTicketsMapped.stream().map(supportTicket->
-                                SupportTicketResponseDto.builder()
-                                        .title(supportTicket.getTitle())
-                                        .ticketStatus(supportTicket.getStatus())
-                                        .description(supportTicket.getDescription())
-                                        .createdAt(supportTicket.getCreatedAt())
-                                        .id(supportTicket.getId())
-                                        .priority(supportTicket.getPriority())
-                                        .build()).collect(Collectors.toList())
+//                                SupportTicketResponseDto.builder()
+//                                        .title(supportTicket.getTitle())
+//                                        .ticketStatus(supportTicket.getStatus())
+//                                        .description(supportTicket.getDescription())
+//                                        .createdAt(supportTicket.getCreatedAt())
+//                                        .id(supportTicket.getId())
+//                                        .priority(supportTicket.getPriority())
+//                                        .build()
+                                TicketMapper.mapper.mapSupportTicketToDto(supportTicket)
+                        ).collect(Collectors.toList())
                         ).orElseGet(List::of);
 
     }
@@ -129,15 +135,18 @@ public class SupportTicketServiceImpl implements SupportTicketService{
         }
 
             //Getting the data in our custom dto
-            List<SupportTicketResponseDto> content = supportTickets.getContent().stream().map(supportTicket->
-                    SupportTicketResponseDto.builder()
-                            .title(supportTicket.getTitle())
-                            .ticketStatus(supportTicket.getStatus())
-                            .description(supportTicket.getDescription())
-                            .createdAt(supportTicket.getCreatedAt())
-                            .id(supportTicket.getId())
-                            .priority(supportTicket.getPriority())
-                            .build()).collect(Collectors.toList());
+            List<SupportTicketResponseDto> content = supportTickets.getContent()
+                    .stream().map(supportTicket->
+//                    SupportTicketResponseDto.builder()
+//                            .title(supportTicket.getTitle())
+//                            .ticketStatus(supportTicket.getStatus())
+//                            .description(supportTicket.getDescription())
+//                            .createdAt(supportTicket.getCreatedAt())
+//                            .id(supportTicket.getId())
+//                            .priority(supportTicket.getPriority())
+//                            .build()
+                    TicketMapper.mapper.mapSupportTicketToDto(supportTicket)
+            ).collect(Collectors.toList());
 
             //returning the data with page information
             return ApiPageResponse.<SupportTicketResponseDto>builder()
@@ -160,13 +169,15 @@ public class SupportTicketServiceImpl implements SupportTicketService{
 
         supportTicket =  supportTicketRepository.save(supportTicket);
 
-        return SupportTicketResponseDto.builder()
-                .title(supportTicket.getTitle())
-                .ticketStatus(supportTicket.getStatus())
-                .description(supportTicket.getDescription())
-                .createdAt(supportTicket.getCreatedAt())
-                .id(supportTicket.getId())
-                .priority(supportTicket.getPriority())
-                .build();
+//        return SupportTicketResponseDto.builder()
+//                .title(supportTicket.getTitle())
+//                .ticketStatus(supportTicket.getStatus())
+//                .description(supportTicket.getDescription())
+//                .createdAt(supportTicket.getCreatedAt())
+//                .id(supportTicket.getId())
+//                .priority(supportTicket.getPriority())
+//                .build();
+
+        return TicketMapper.mapper.mapSupportTicketToDto(supportTicket);
     }
 }

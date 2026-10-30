@@ -4,9 +4,11 @@ import com.salim.actora.auth.config.JwtService;
 import com.salim.actora.auth.dto.CreateUserDto;
 import com.salim.actora.auth.dto.LoginDto;
 import com.salim.actora.auth.dto.LoginResponseDto;
+import com.salim.actora.auth.dto.UserDto;
 import com.salim.actora.auth.entity.RefreshToken;
 import com.salim.actora.auth.entity.Role;
 import com.salim.actora.auth.entity.User;
+import com.salim.actora.auth.mapper.UserMapper;
 import com.salim.actora.auth.repository.RefreshTokenRepository;
 import com.salim.actora.auth.repository.RoleRepository;
 import com.salim.actora.auth.repository.UserRepository;
@@ -189,12 +191,9 @@ public class AuthService {
 
     }
 
-    public User createUser(CreateUserDto dto){
+    public UserDto createUser(CreateUserDto dto){
 
         Optional<User> existingUser = userRepository.findByUsername(dto.getUsername());
-
-
-        System.out.println("entered create user method service is Present"+existingUser.isPresent());
 
         if(existingUser.isPresent()){
             throw new RuntimeException("User Already exists with username");
@@ -214,15 +213,14 @@ public class AuthService {
 
         user.getRoles().add(role);
 
-        System.out.println("User role set");
-
 
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        System.out.println("Saving user");
 
-        return userRepository.save(user);
+        user = userRepository.save(user);
+
+        return UserMapper.mapper.mapUserToUserResponse(user);
 
     }
 }

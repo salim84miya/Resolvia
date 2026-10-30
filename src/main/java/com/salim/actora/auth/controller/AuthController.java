@@ -1,9 +1,6 @@
 package com.salim.actora.auth.controller;
 
-import com.salim.actora.auth.dto.CreateUserDto;
-import com.salim.actora.auth.dto.LoginDto;
-import com.salim.actora.auth.dto.LoginResponseDto;
-import com.salim.actora.auth.dto.RefreshTokenDto;
+import com.salim.actora.auth.dto.*;
 import com.salim.actora.auth.entity.User;
 import com.salim.actora.auth.services.AuthService;
 import com.salim.actora.util.ResponseBuilder;
@@ -32,7 +29,7 @@ public class AuthController {
     public ResponseEntity<?> createUser(@RequestBody @Valid CreateUserDto dto){
         System.out.println("entered create user controller method");
 
-       User user = authService.createUser(dto);
+       UserDto user = authService.createUser(dto);
 
         System.out.println("created user in controller method user: "+user.getUsername());
 

@@ -3,6 +3,7 @@ package com.salim.actora.orders.services;
 import com.salim.actora.orders.data.OrderStatus;
 import com.salim.actora.orders.dto.OrderResponseDto;
 import com.salim.actora.orders.entity.Order;
+import com.salim.actora.orders.mapper.OrderMapper;
 import com.salim.actora.orders.repository.OrderRepository;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,14 @@ public class OrderServiceImpl implements OrderService {
 
         return orders.map(orderList -> orderList.stream()
                 .map(order ->
-                        OrderResponseDto.builder()
-                                .orderId(order.getId())
-                                .orderStatus(order.getOrderStatus())
-                                .estimatedDeliveryTime(order.getEstimatedDeliveryTime())
-                                .createdAt(order.getCreatedAt())
-                                .build()
+//                        OrderResponseDto.builder()
+//                                .orderId(order.getId())
+//                                .orderStatus(order.getOrderStatus())
+//                                .estimatedDeliveryTime(order.getEstimatedDeliveryTime())
+//                                .createdAt(order.getCreatedAt())
+//                                .build()
+
+                                OrderMapper.mapper.mapOrderToOrderDto(order)
                 ).collect(Collectors.toList())).orElseGet(List::of);
 
     }
@@ -56,8 +59,8 @@ public class OrderServiceImpl implements OrderService {
 
         return OrderResponseDto.builder()
                 .orderId(order.getId())
-                .orderStatus(order.getOrderStatus())
-                .estimatedDeliveryTime(order.getEstimatedDeliveryTime())
+                .currentStatus(order.getOrderStatus())
+                .deliveryTime(order.getEstimatedDeliveryTime())
                 .createdAt(order.getCreatedAt())
                 .build();
     }
