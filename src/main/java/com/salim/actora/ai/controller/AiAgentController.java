@@ -9,12 +9,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/ai")
 public class AiAgentController {
 
     private final AiService aiService;
 
 
-    @GetMapping("/ai")
+    @GetMapping("/chat")
     public ResponseEntity<?> askAi(@RequestParam String prompt, HttpServletRequest request){
 
         var result = aiService.aiResponse(prompt,request);
