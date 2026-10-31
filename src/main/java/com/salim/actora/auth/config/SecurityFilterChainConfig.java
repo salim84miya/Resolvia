@@ -29,10 +29,11 @@ public class SecurityFilterChainConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->
                         auth
+                                .requestMatchers("/embed/**").permitAll()
                                 .requestMatchers("/order/**").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/ai/**").authenticated()
+                                .requestMatchers("/ai/**").permitAll()
                                 .requestMatchers("/ticket/**").hasRole(AppConstants.ADMIN_ROLE)
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,6 +1,5 @@
 package com.salim.actora.tickets.mapper;
 
-import com.salim.actora.tickets.data.TicketStatus;
 import com.salim.actora.tickets.dto.SupportTicketResponseDto;
 import com.salim.actora.tickets.entity.SupportTicket;
 import org.mapstruct.Mapper;

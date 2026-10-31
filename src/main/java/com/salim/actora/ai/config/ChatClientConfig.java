@@ -19,4 +19,5 @@ public class ChatClientConfig {
 
         return builder.defaultAdvisors(chatMemoryAdvisor).build();
     }
+
 }
